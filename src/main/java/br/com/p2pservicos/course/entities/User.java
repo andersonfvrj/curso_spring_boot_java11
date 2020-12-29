@@ -2,11 +2,20 @@ package br.com.p2pservicos.course.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 //Serializable é necessário para permitir que o objeto sera serializado e possa trafegar pela rede, BD, etc.
+//A anotação entity, indica ao JPA que é uma entidade do banco de dados
+@Entity
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@Id //indica que é um campo identificador (Ex: chave primária)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //Indica ao JPA que será um campo de auto-incremento
 	private Long id;
 	private String name;
 	private String email;
