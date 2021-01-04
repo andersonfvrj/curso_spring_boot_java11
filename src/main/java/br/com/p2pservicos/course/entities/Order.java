@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import br.com.p2pservicos.course.entities.enums.OrderStatus;
+
 @Entity
 @Table(name = "tb_order")
 public class Order implements Serializable {
@@ -26,6 +28,8 @@ public class Order implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT") //Comando para mostrar a data formatada
 	private Instant moment; //a partir do Java 8 é melhor que a classe date para datas
 
+	private Integer orderStatus; //Está sendo declarado como integer para dizer explicitamente que será gravado no BD como inteiro
+	
 	//Estas anotations são necessárias para que o hibernate/JPA crie os relacionamentos no banco de dados
 	@ManyToOne //Indica um relacionamento muitos para um no BD
 	@JoinColumn(name = "client_id") //Indica entre as tabelas será feito pelo campo "client_id"
@@ -34,11 +38,12 @@ public class Order implements Serializable {
 	public Order() {		
 	}
 
-	public Order(Long id, Instant moment, User client) {
+	public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
 		super();
 		this.id = id;
 		this.moment = moment;
 		this.client = client;
+		setOrderStatus(orderStatus);
 	}
 
 	public Long getId() {
@@ -55,6 +60,18 @@ public class Order implements Serializable {
 
 	public void setMoment(Instant moment) {
 		this.moment = moment;
+	}
+
+	//Está sendo feito dessa forma para converter o ENUM para inteiro do BD
+	public OrderStatus getOrderStatus() {
+		return OrderStatus.valueOf(orderStatus);
+	}
+
+	//Está sendo feito dessa forma para converter o inteiro que vem do BD para Enum
+	public void setOrderStatus(OrderStatus orderStatus) {
+		if (orderStatus != null) {
+			this.orderStatus = orderStatus.getCode();
+		}
 	}
 
 	public User getClient() {
