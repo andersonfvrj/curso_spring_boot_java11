@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 //Serializable é necessário para permitir que o objeto sera serializado e possa trafegar pela rede, BD, etc.
 //A anotação entity, indica ao JPA que é uma entidade do banco de dados
 @Entity
@@ -27,6 +29,7 @@ public class User implements Serializable {
 	private String phone;
 	private String password;
 	
+	@JsonIgnore //Evita que na hora de construir o JSON, fique em loop já que existe relacionamento entre os dois lados
 	@OneToMany(mappedBy = "client") //Indica um relacionamento 1 para muitos e que está mapeado pelo campo "client" na outra classe
 	private List<Order> orders = new ArrayList<>();
 	

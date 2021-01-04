@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "tb_order")
 public class Order implements Serializable {
@@ -20,6 +22,8 @@ public class Order implements Serializable {
 	@Id //indica que é um campo identificador (Ex: chave primária)
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //Indica ao JPA que será um campo de auto-incremento
 	private Long id;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT") //Comando para mostrar a data formatada
 	private Instant moment; //a partir do Java 8 é melhor que a classe date para datas
 
 	//Estas anotations são necessárias para que o hibernate/JPA crie os relacionamentos no banco de dados
@@ -28,6 +32,13 @@ public class Order implements Serializable {
 	private User client;
 	
 	public Order() {		
+	}
+
+	public Order(Long id, Instant moment, User client) {
+		super();
+		this.id = id;
+		this.moment = moment;
+		this.client = client;
 	}
 
 	public Long getId() {
