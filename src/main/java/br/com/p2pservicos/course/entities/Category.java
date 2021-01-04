@@ -1,12 +1,17 @@
 package br.com.p2pservicos.course.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_category")
@@ -18,6 +23,10 @@ public class Category implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	
+	@JsonIgnore //Para evitar que fique em loop entre o relacionamento com a tabela de produtos
+	@ManyToMany(mappedBy = "categories") //Indica relacionamento muito para muitos através da coleção categories da entidade product
+	private Set<Product> products = new HashSet<>(); //Indica uma coleção de produtos
 	
 	public Category() {
 		
@@ -68,6 +77,10 @@ public class Category implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
 	}
 	
 	
