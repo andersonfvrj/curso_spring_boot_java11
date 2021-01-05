@@ -6,6 +6,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.p2pservicos.course.entities.pk.OrderItemPK;
 
 @Entity
@@ -15,7 +17,8 @@ public class OrderItem implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId //Indica que esse ID é composto
-	private OrderItemPK id; //Variavel do tipo da classe auxiliar que criamos para o relacionamento
+	private OrderItemPK id = new OrderItemPK(); //Variavel do tipo da classe auxiliar que criamos para o relacionamento
+	//como é uma chave composta, o objeto deve ser iniciado de cara
 	
 	private Integer quantity;
 	
@@ -33,6 +36,7 @@ public class OrderItem implements Serializable{
 		this.price = price;
 	}
 	
+	@JsonIgnore //Para ignorar a chamada redundante do relacionamento com os itens do pedido
 	public Order getOrder() {
 		return id.getOrder();
 	}
