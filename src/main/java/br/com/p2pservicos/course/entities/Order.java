@@ -105,6 +105,15 @@ public class Order implements Serializable {
 	public void setPayment(Payment payment) {
 		this.payment = payment;
 	}
+	
+	//Metodo para retornar o total do pedido
+	public Double getTotal() { //Usando o get na frente para indicar ao Java EE que deve retornar valor
+		Double sum = 0.0;
+		for (OrderItem x : items) {
+			sum += x.getSubTotal();
+		}
+		return sum;
+	}
 
 	@Override
 	public int hashCode() {
