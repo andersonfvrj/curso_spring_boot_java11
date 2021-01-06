@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +51,13 @@ public class UserResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		
 		return ResponseEntity.created(uri).body(obj); //Retorna OK com o código 201 e a URL do usuário inserido
+	}
+	
+	//Metodo para excluir um usuário
+	@DeleteMapping(value = "/{id}") //Indica que o parâmetro virá pela URL //Indica que a chamada http deve ser um delete
+	public ResponseEntity<Void> delete (@PathVariable Long id) { //O pathvariable permite pegar o valor passado na URL
+		service.delete(id);
+		return ResponseEntity.noContent().build(); //nocontent indica que não haverá retorno Json, apenas o código 204 de OK para deleção
 	}
 	
 

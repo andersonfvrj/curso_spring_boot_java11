@@ -33,5 +33,10 @@ public class UserService {
 	public User insert(User obj) {
 		return repository.save(obj);
 	}
+	
+	//Método para excluir um usuário
+	public void delete(Long id) {
+		repository.deleteById(id);
+	}
 
 }
