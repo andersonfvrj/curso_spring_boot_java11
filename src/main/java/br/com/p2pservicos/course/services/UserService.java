@@ -3,6 +3,8 @@ package br.com.p2pservicos.course.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -53,9 +55,13 @@ public class UserService {
 	
 	//Método para atualizar um usuário
 	public User update(Long id, User obj) {
-		User entity = repository.getOne(id); //Apenas monitora o objeto mas não tráz de imediato
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			User entity = repository.getOne(id); //Apenas monitora o objeto mas não tráz de imediato
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	//Método para alterar de fato os dados do usuário
