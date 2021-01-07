@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.p2pservicos.course.entities.User;
 import br.com.p2pservicos.course.repositories.UserRepository;
+import br.com.p2pservicos.course.services.exceptions.DatabaseException;
 import br.com.p2pservicos.course.services.exceptions.ResourceNotFoundException;
 
 //Esta classe, assim como todos os "Serviços" tem por objetivo armazenar as regras de negócio da aplicação
@@ -37,7 +40,15 @@ public class UserService {
 	
 	//Método para excluir um usuário
 	public void delete(Long id) {
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			//Em caso de não encontrar o ID, vai gerar nossa exceção personalizada
+			throw new ResourceNotFoundException(id);
+		} catch (DataIntegrityViolationException e) {
+			//Em caso de não conseguir excluir por violação de integridade no BD, vai gerar nossa exceção personalizada
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 	
 	//Método para atualizar um usuário
